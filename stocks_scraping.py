@@ -32,15 +32,35 @@ for column in header_html:
     header.append(column.text)
 else:
     header[0] = 'Multiple'
-print(header)
 
 index_html = html_statistics.tbody.find_all("tr")
-for i in index_html:
-   print(i.get_text(separator = ','))
 
-#header vai ser utilizado para ser as columns do pandas
-#In [51]: pd.DataFrame(data, columns=['C', 'A', 'B'])
-#Out[51]: 
-#          C  A    B
-#0  b'Hello'  1  2.0
-#1  b'World'  2  3.0
+#print(len(index_html[0]))
+#print(len(index_html))
+
+rows = []
+contents = []
+counter = 0
+
+while counter < len(index_html):
+    for item in index_html[counter]:
+        contents.append(item.text)
+    else:
+        rows.append(contents)
+        contents = []
+    counter += 1
+#print(row)
+
+table = pd.DataFrame(data = rows, columns = header)
+print(table)
+
+while True:
+    report = input('Do you want to generate an CSV (.csv) report containing these information? [y/n] ')
+    if report == 'y':
+        table.to_csv(f'{ticker}.csv', index = False)
+        print('The document was generated in the current directory')
+        quit()
+    elif report == 'n':
+        quit()
+    else:
+        print('This is not a valid choice')
